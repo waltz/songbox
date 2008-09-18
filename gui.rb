@@ -1,3 +1,5 @@
+require 'seeqpod'
+
 Shoes.app(:title => 'Songbox',
           :width => 350,
           :height => 400,
@@ -12,8 +14,13 @@ Shoes.app(:title => 'Songbox',
   end
   
   @search_results = flow do
-    para "Nothing yet."
+    Seeqpod.search('jay-z').each do |track|
+      flow do
+        para track.title
+      end
+    end
   end
+  
   
   stack(:width => 350) do
     @search_box
