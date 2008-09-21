@@ -10,11 +10,15 @@ Shoes.app(:title => 'Songbox',
       flow do
         Seeqpod.search(query).each do |track|
           flow do
-            para track.title
+            strong track.artist
+            em track.title
+            p = progress :width => 1.0
             button "Download" do
-              download(track.uri, :save => 'foo.mp3') do
-                alert "Downloaded Finished"
-              end
+              info "Download Started! " + track.uri
+              download(track.uri,
+                       :save => File.basename(track.uri),
+                       :progress => proc { |dl| p.fraction = dl.percent * 0.01 },
+                       :finish => proc { info "Finished: " + File.basename(track.uri) })
             end
           end
         end
@@ -22,10 +26,10 @@ Shoes.app(:title => 'Songbox',
     end
   end
             
-  background rgb(237, 227, 158)
+  background white
   
   @search_box = flow(:width => 450, :height => 50) do
-    background rgb(255, 93, 40)
+    background black
     scroll false
     
     @search_query = edit_line(:width => 200)
@@ -41,8 +45,6 @@ Shoes.app(:title => 'Songbox',
     @search_box
     @search_results
   end
-  
-
   
 end
 
