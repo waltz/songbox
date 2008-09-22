@@ -5,7 +5,7 @@ require 'rexml/document'
 # Quick interface for Seeqpod.
 class Seeqpod
   
-  class Track < Struct.new(:artist, :title, :uri); end
+  class Track < Struct.new(:artist, :title, :location); end
   
   def self.search(query, args = {})
     query = URI.escape(query)
@@ -19,10 +19,10 @@ class Seeqpod
     tracks = []
     
     doc.root.each_element('//track') do |track|
-      uri = URI.escape(track.elements[1].text)
+      location = URI.escape(track.elements[1].text)
       artist = track.elements[3].text
       title = track.elements[2].text
-      tracks << Track.new(artist, title, uri)
+      tracks << Track.new(artist, title, location)
     end
     
     tracks
