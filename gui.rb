@@ -6,34 +6,28 @@ Shoes.app(:title => 'Songbox',
           :resizable => false) do
   
   def preview_widget(location)
-    v = video(location)
-    v.hide
-    
-    play = proc do
-      button "play" do
-        v.play
-        l = pause
+    flow do
+      t = title "not playing"
+      v = video location
+      v.hide
+      button("play") { v.play }
+      button("pause") { v.pause }
+      every(1) do
+        t.replace((v.time.to_i * 1000).to_s)
       end
     end
-    
-    pause = proc do
-      button "pause" do
-        v.pause
-        l = play
-      end
-    end
-    
-    l = play
   end
   
   def download_widget(location)
-    p = progress :width => 1.0
-    button "download" do
-      info "Started: " + File.basename(location)
-      download(location,
-               :save => File.basename(location),
-               :progress => proc { |dl| p.fraction = dl.percent * 0.01 },
-               :finish => proc { info "Finished: " + File.basename(location) })
+    flow do
+      p = progress(:width => 1.0)
+      button "download" do
+        info "Started: " + File.basename(location)
+        download(location,
+                 :save => File.basename(location),
+                 :progress => proc { |dl| p.fraction = dl.percent * 0.01 },
+                 :finish => proc { info "Finished: " + File.basename(location) })
+      end
     end
   end
   
@@ -45,7 +39,17 @@ Shoes.app(:title => 'Songbox',
           flow do
             para strong track.artist.to_s
             para em track.title.to_s
-            preview_widget(track.location)
+            #preview_widget(track.location)
+            flow do
+              v = video track.location
+              v.hide
+              button("play") { v.play }
+              button("pause") { v.pause }
+              t = para ""
+              animate do
+                t.replace((v.time.to_i * 0.001).to_s)
+              end
+            end
             download_widget(track.location)
           end
         end
