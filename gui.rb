@@ -5,9 +5,26 @@ require 'rexml/document'
 # A Seeqpod user id so we can use their API.
 USER_ID = "92b90c39b6fa07674f7b4f1ca07fc42ec33eda87"
 
-module Songbox
+Track = Struct.new(:artist, :title, :location)
+
+Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
-  Track = Struct.new(:artist, :title, :location)
+  def render_search(query, slot)
+    search_thread = Thread.new do
+      flow do
+        seeqpod_search(query).each do |track|
+          flow do
+            para strong track.artist.to_s
+            para em track.title.to_s
+            #preview_widget(track.location)
+            download_widget(track.location)
+          end
+        end
+      end
+    end
+
+    slot.clear { search_thread.value }
+  end
   
   def seeqpod_search(query, args = {})
     query = URI.escape(query)
@@ -45,7 +62,7 @@ module Songbox
   
   def download_widget(location)
     flow do
-      p = progress(:width => 1.0)
+      p = progress(:width => 0.75, :margin => 5)
       button "Download" do
         download(location,
                  :save => File.basename(location),
@@ -54,47 +71,23 @@ module Songbox
     end
   end
   
-  # Asks Seeqpod for a list of results and formats them.
-  def render_search(query, container)
-    search_results = nil
+  ###
+  ### Real app code.
+  ###
+         
+  background black
 
-    # Do the search asynchronously.
-    search_thread = Thread.new do
-      search_results = flow do
-          seeqpod_search(query).each do |track|
-            flow do
-              para strong track.artist.to_s
-              para em track.title.to_s
-              #preview_widget(track.location)
-              download_widget(track.location)
-            end
-          end
-      end
+  stack do
+    @search_box = flow(:width => 450, :height => 55, :margin => 10) do
+      search_box = edit_line(:width => 0.70)
+      search_button = button("Search", :width => 0.29) { render_search(search_box.text, @search_results) }
     end
     
-    search_results
+    flow(:width => 450, :height => 445) do
+      background white
+      @search_results = flow { para "No search made yet."}
+    end
   end
   
-end
 
-Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
-  
-  extend Songbox
-            
-  background white
-
-  @search_box = flow(:width => 450, :height => 50) do
-    background black
-    search_query = edit_line
-    search_button = button("Search")
-    search_button.click { render_search(search_query.text, @search_results_view) }
-  end
-  
-  @search_results_view = flow { para "Go for it punk!" }
-  
-  stack do
-    @search_box
-    @search_results_view
-  end
-  
 end
