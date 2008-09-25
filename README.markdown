@@ -20,4 +20,4 @@ don't exist or have been taken down.
 [CJ Bryan](http://deepyogurt.org)
 
 ## How is this software licensed? ##
-See the
+Songbox is licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
