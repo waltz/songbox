@@ -77,7 +77,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
          
   background black
 
-  stack(:margin_right => gutter) do
+  stack(:margin_right => 40+gutter) do
     @search_box = flow(:width => 450, :height => 55, :margin => 10) do
       search_box = edit_line(:width => 0.70)
       search_button = button("Search", :width => 0.29) { render_search(search_box.text, @search_results) }
