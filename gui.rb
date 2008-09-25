@@ -13,7 +13,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     search_thread = Thread.new do
       flow do
         seeqpod_search(query).each do |track|
-          flow do
+          flow(:margin => 20) do
             para strong track.artist.to_s
             para em track.title.to_s
             #preview_widget(track.location)
@@ -77,13 +77,13 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
          
   background black
 
-  stack do
+  stack(:margin_right => gutter) do
     @search_box = flow(:width => 450, :height => 55, :margin => 10) do
       search_box = edit_line(:width => 0.70)
       search_button = button("Search", :width => 0.29) { render_search(search_box.text, @search_results) }
     end
     
-    flow(:width => 450, :height => 445) do
+    flow(:width => 450) do
       background white
       @search_results = flow { para "No search made yet."}
     end

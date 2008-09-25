@@ -1,9 +1,23 @@
-Christian Bryan
-September 16, 2008
+# Songbox #
+ 
+Website: [http://deepyogurt.org/projects/songbox](http://deepyogurt.org/projects/songbox)
 
-Songbox
+Repository: [git://github.com/waltz/songbox.git](git://github.com/waltz/songbox.git)
 
-What is Songbox?
- Songbox is a quick MP3 downloader. Enter the name of the song you'd like to search for
- and then let the results roll in. When you see a song you want, click download and it'll
- automatically be put into the selected folder.
+## What is Songbox? ##
+Songbox is an quick-n-dirty MP3 downloader. Plug in a search in the box at the top, hit the 'Search' button
+and you'll be on your merry way to oodles of free music.
+
+## How does it work? ##
+We ask our friends over at [Seeqpod](http://seeqpod.com) for the locations of the music that you're looking for.
+Once we have those locations we give you the download button and make sure the file is saved to the right place.
+
+## Why don't some of the songs download? ##
+We're working on the problem, but it's a tough one. A good portion of the time we try to download files that
+don't exist or have been taken down.
+
+## Who is it written by? ##
+[CJ Bryan](http://deepyogurt.org)
+
+## How is this software licensed? ##
+See the
