@@ -23,10 +23,8 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
         end
       end
     end
-
-    slot.clear do
-      search_thread.value
-    end
+    
+    slot.clear { search_thread.value }
   end
   
   def seeqpod_search(query, args = {})

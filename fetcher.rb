@@ -1,16 +1,14 @@
 class Fetcher < Shoes::Widget
   
   def initialize(options = {})
-   flow :width => 50, :height => 50 do
-     arrow
-   end
+    draw_arrow
   end
   
-  def arrow
-    stroke green
-    fill green
-    rotate 45
-    arrow :width => 30    
+  def draw_arrow
+    # fill orange
+    translate 50, 50
+    rotate 270
+    arrow 0, 0, 25    
   end
   
 end
