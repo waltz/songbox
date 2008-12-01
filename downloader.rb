@@ -36,7 +36,7 @@ require 'net/http'
 class Downloader
   
   USER_AGENT = "Songbox (http://deepyogurt.org/projects/songbox)"
-  CHUNK_SIZE = 100000
+  CHUNK_SIZE = 500000
   
   attr_accessor :url, :browser, :content_length
   
@@ -49,9 +49,7 @@ class Downloader
   def download(start = 0, stop = content_length, length = CHUNK_SIZE, &block)
     start.step(stop, length) do |n|
       data = fetch_chunk(n, n + length)
-      if block_given?
-        yield data, n, n + length
-      end
+      yield(((n+length)/content_length.to_f)*100) if block_given?
       @content << data
     end
   end
@@ -61,7 +59,6 @@ class Downloader
   end
   
   def fetch_chunk(start, stop)
-    #puts "Getting bytes #{start}-#{stop} of #{content_length}."
     @browser.request_get(@url.path, { "Range" => "bytes=#{start}-#{stop}" }).body
   end
   

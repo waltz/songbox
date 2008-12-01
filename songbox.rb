@@ -1,6 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'rexml/document'
+require 'fetcher'
 
 # A Seeqpod user id so we can use their API.
 USER_ID = "92b90c39b6fa07674f7b4f1ca07fc42ec33eda87"
@@ -14,8 +15,8 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       flow do
         seeqpod_search(query).each do |track|
           flow(:margin => 20) do
-            para strong track.artist.to_s
-            para em track.title.to_s
+            para(strong(track.artist.to_s))
+            para(em(track.title.to_s))
             #preview_widget(track.location)
             download_widget(track.location)
           end
@@ -23,7 +24,9 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       end
     end
 
-    slot.clear { search_thread.value }
+    slot.clear do
+      search_thread.value
+    end
   end
   
   def seeqpod_search(query, args = {})
@@ -61,14 +64,15 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
   end
   
   def download_widget(location)
-    flow do
-      p = progress(:width => 0.75, :margin => 5)
-      button "Download" do
-        download(location,
-                 :save => File.basename(location),
-                 :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
-      end
-    end
+    # flow do
+    #   p = progress(:width => 0.75, :margin => 5)
+    #   button "Download" do
+    #     download(location,
+    #              :save => File.basename(location),
+    #              :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
+    #   end
+    # end
+    fetcher
   end
   
   ###
