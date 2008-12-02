@@ -5,10 +5,12 @@ class Fetcher < Shoes::Widget
   end
   
   def draw_arrow
-    # fill orange
-    translate 50, 50
-    rotate 270
-    arrow 0, 0, 25    
+    flow do
+      width = 50
+      translate width/2, width/2
+      rotate 270
+      arrow 0, 0, width
+    end
   end
   
 end
