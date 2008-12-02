@@ -1,11 +1,9 @@
 require 'net/http'
 require 'uri'
 require 'rexml/document'
+require 'cyclops'
+require 'track'
 
-# A Seeqpod user id so we can use their API.
-USER_ID = "92b90c39b6fa07674f7b4f1ca07fc42ec33eda87"
-
-Track = Struct.new(:artist, :title, :location)
 
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
@@ -14,10 +12,18 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       flow do
         seeqpod_search(query).each do |track|
           flow(:margin => 20) do
-            para strong track.artist.to_s
-            para em track.title.to_s
-            #preview_widget(track.location)
-            download_widget(track.location)
+            
+            stack do
+              para track.name
+            end
+            
+            stack do
+              stroke green
+              fill red
+              inscription track.filename
+            end
+            
+            #download_widget(track.location)
           end
         end
       end
@@ -30,7 +36,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     query = URI.escape(query)
     start_index = args[:start_index] || 0   # Default index is 0 unless previously set.
     num_results = args[:num_results] || 10  # Default is 10 unless...
-    user_id = USER_ID
+    user_id = "92b90c39b6fa07674f7b4f1ca07fc42ec33eda87"
     uri = "http://www.seeqpod.com/api/v0.2/#{user_id}/music/search/#{query}/#{start_index}/#{num_results}/"
     
     data = Net::HTTP.get(URI.parse(uri))
@@ -41,7 +47,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       location = URI.escape(track.elements[1].text)
       artist = track.elements[3].text
       title = track.elements[2].text
-      tracks << Track.new(artist, title, location)
+      tracks << Track.new(:artist => artist, :title => title, :location => location)
     end
     
     tracks
@@ -66,7 +72,9 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       button "Download" do
         download(location,
                  :save => File.basename(location),
-                 :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
+                 :progress => proc { |dl| p.fraction = dl.percent * 0.01 }) do |file|
+                   info file.response.methods
+                 end
       end
     end
   end
@@ -75,17 +83,23 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
   ### Real app code.
   ###
          
-  background black
+  background white
 
-  stack(:margin_right => 40+gutter) do
-    @search_box = flow(:width => 450, :height => 55, :margin => 10) do
-      search_box = edit_line(:width => 0.70)
-      search_button = button("Search", :width => 0.29) { render_search(search_box.text, @search_results) }
+  stack do
+    flow(:width => 450) do
+      background black
+      @search_box = flow(:width => 450, :height => 55, :margin => 10) do
+        query = edit_line(:width => 310, :left => 0)
+        search_button = button("Search", :width => 100, :left => 325) do
+          render_search(query.text, @search_results)
+        end
+      end
     end
     
     flow(:width => 450) do
-      background white
-      @search_results = flow { para "No search made yet."}
+      @search_results = flow do
+        #cyclops :radius => 20
+      end
     end
   end
   
