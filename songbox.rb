@@ -1,9 +1,7 @@
 require 'net/http'
 require 'uri'
 require 'rexml/document'
-require 'cyclops'
-require 'track'
-
+require 'fetcher'
 
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
@@ -12,23 +10,15 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
       flow do
         seeqpod_search(query).each do |track|
           flow(:margin => 20) do
-            
-            stack do
-              para track.name
-            end
-            
-            stack do
-              stroke green
-              fill red
-              inscription track.filename
-            end
-            
-            #download_widget(track.location)
+            para(strong(track.artist.to_s))
+            para(em(track.title.to_s))
+            #preview_widget(track.location)
+            download_widget(track.location)
           end
         end
       end
     end
-
+    
     slot.clear { search_thread.value }
   end
   
