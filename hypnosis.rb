@@ -3,7 +3,7 @@ Shoes.app do
   stack do
     @v = video "http://thetapeisnotsticky.com/uploads/2008/09/kids-soulwax-remix.mp3"
   end
-  #@v.hide
+  # @v.hide
   button("play") {@v.play}
   button("stop"){@v.stop}
   animate do

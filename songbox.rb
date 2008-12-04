@@ -2,6 +2,7 @@ require 'net/http'
 require 'uri'
 require 'rexml/document'
 require 'fetcher'
+require 'track'
 
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
@@ -57,16 +58,15 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
   end
   
   def download_widget(location)
-    flow do
-      p = progress(:width => 0.75, :margin => 5)
-      button "Download" do
-        download(location,
-                 :save => File.basename(location),
-                 :progress => proc { |dl| p.fraction = dl.percent * 0.01 }) do |file|
-                   info file.response.methods
-                 end
-      end
-    end
+    # flow do
+    #   p = progress(:width => 0.75, :margin => 5)
+    #   button "Download" do
+    #     download(location,
+    #              :save => File.basename(location),
+    #              :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
+    #   end
+    # end
+    flow { fetcher }
   end
   
   ###
@@ -88,7 +88,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     
     flow(:width => 450) do
       @search_results = flow do
-        #cyclops :radius => 20
+        # cyclops :radius => 20
       end
     end
   end
