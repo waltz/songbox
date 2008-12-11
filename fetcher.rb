@@ -1,19 +1,28 @@
+require 'downloader'
+
 class Fetcher < Shoes::Widget
   
   def initialize(options = {})
-    draw_arrow
+    @s = stack { draw_arrow }
+    @s.click do
+      info "yooooo"
+      @s.clear do
+        para "the fuck?"
+        info "hey!"
+      end
+    end
   end
   
   def draw_arrow
-    # flow do
-    #   width = 50
-    #   translate width/2, width/2
-    #   rotate 270
-    #   arrow 0, 0, width
-    # end
-    # rotate 15
-    # translate :center
-    arrow :width => 10
+    image "down_arrow.png"
+  end
+  
+  def red_x
+    image "red-x.png"
+  end
+  
+  def click
+    info "what"
   end
   
 end
