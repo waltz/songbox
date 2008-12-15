@@ -7,6 +7,11 @@ require 'track'
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
   def render_search(query, slot)
+    # if slot.nil?
+    #   raise "render_search needs a non-nil slot!"
+    # end
+    # info slot.nil?.to_s
+    
     search_thread = Thread.new do
       flow do
         seeqpod_search(query).each do |track|
@@ -14,8 +19,9 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
             para(strong(track.artist.to_s))
             para(em(track.title.to_s))
             #preview_widget(track.location)
-            download_widget(track.location)
+            #download_widget(track.location)
           end
+          download_widget(track.location)
         end
       end
     end
@@ -66,7 +72,7 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     #              :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
     #   end
     # end
-    flow { fetcher }
+    flow { fetcher(:url => location) }
   end
   
   ###
