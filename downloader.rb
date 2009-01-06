@@ -47,9 +47,14 @@ class Downloader
   end
   
   def download(start = 0, stop = content_length, length = CHUNK_SIZE, &block)
+    if content_length == 0
+      raise Exception.new("Content length is nil!")
+      return
+    end
+    
     start.step(stop, length) do |n|
       data = fetch_chunk(n, n + length)
-      yield(((n+length)/content_length.to_f)*100) if block_given?
+      yield((n+length)/content_length.to_f) if block_given?
       @content << data
     end
   end
@@ -59,7 +64,11 @@ class Downloader
   end
   
   def fetch_chunk(start, stop)
-    @browser.request_get(@url.path, { "Range" => "bytes=#{start}-#{stop}" }).body
+    begin
+      @browser.request_get(@url.path, { "Range" => "bytes=#{start}-#{stop}" }).body
+    rescue Exception
+      error "FETCH CHUNK EXCEPTION!"
+    end
   end
   
 end
