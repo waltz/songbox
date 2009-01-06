@@ -18,10 +18,8 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
           flow(:margin => 20) do
             para(strong(track.artist.to_s))
             para(em(track.title.to_s))
-            #preview_widget(track.location)
-            #download_widget(track.location)
           end
-          download_widget(track.location)
+          fetcher(:url => track.location)
         end
       end
     end
@@ -50,31 +48,6 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     tracks
   end
   
-  def preview_widget(location)
-    flow do
-      t = title "not playing"
-      v = video location
-      v.hide
-      button("play") { v.play }
-      button("pause") { v.pause }
-      every(1) do
-        t.replace((v.time.to_i * 1000).to_s)
-      end
-    end
-  end
-  
-  def download_widget(location)
-    # flow do
-    #   p = progress(:width => 0.75, :margin => 5)
-    #   button "Download" do
-    #     download(location,
-    #              :save => File.basename(location),
-    #              :progress => proc { |dl| p.fraction = dl.percent * 0.01 })
-    #   end
-    # end
-    flow { fetcher(:url => location) }
-  end
-  
   ###
   ### Real app code.
   ###
@@ -94,10 +67,9 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     
     flow(:width => 450) do
       @search_results = flow do
-        # cyclops :radius => 20
+        para "Waiting for searches..."
       end
     end
   end
   
-
 end
