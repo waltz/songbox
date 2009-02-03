@@ -69,18 +69,27 @@ protected
   end
   
   def draw_progress(percent)
-    para percent.to_s
-    
     yellow = rgb(238, 238, 17)
     orange = rgb(255, 117, 24)
 
+    stroke gray
+    fill white
+    strokewidth 2
+    
+    oval 25, 25, 50, 50
+    
     stroke orange
-    fill yellow
+    fill white
     strokewidth 5
   
     start = -(Shoes::HALF_PI)
     stop = start + (Shoes::TWO_PI * percent)
     arc 50, 50, 50, 50, start, stop
+    
+    flow(:top => 38, :left => 0) do
+      stroke gray
+      inscription((percent * 100).truncate.to_s, :align => 'center')
+    end
   end
   
 end

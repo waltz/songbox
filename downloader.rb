@@ -36,7 +36,7 @@ require 'net/http'
 class Downloader
   
   USER_AGENT = "Songbox (http://deepyogurt.org/projects/songbox)"
-  CHUNK_SIZE = 500000
+  CHUNK_SIZE = 100000
   
   attr_accessor :url, :browser, :content_length
   
@@ -54,7 +54,7 @@ class Downloader
     
     start.step(stop, length) do |n|
       data = fetch_chunk(n, n + length)
-      yield((n+length)/content_length.to_f) if block_given?
+      yield((n+data.size)/content_length.to_f) if block_given?
       @content << data
     end
   end

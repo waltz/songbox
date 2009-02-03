@@ -7,11 +7,6 @@ require 'track'
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false) do
   
   def render_search(query, slot)
-    # if slot.nil?
-    #   raise "render_search needs a non-nil slot!"
-    # end
-    # info slot.nil?.to_s
-    
     search_thread = Thread.new do
       flow do
         seeqpod_search(query).each do |track|
@@ -23,10 +18,10 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
         end
       end
     end
-    
     slot.clear { search_thread.value }
   end
   
+  # Get a list of songs and URI's from some search string.
   def seeqpod_search(query, args = {})
     query = URI.escape(query)
     start_index = args[:start_index] || 0   # Default index is 0 unless previously set.
@@ -36,6 +31,11 @@ Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => fals
     
     data = Net::HTTP.get(URI.parse(uri))
     doc = REXML::Document.new(data)
+    
+    # download uri do |data|
+    #   doc = REXML::Document.new(data.response.body)
+    # end   
+    
     tracks = []
     
     doc.root.each_element('//track') do |track|
