@@ -20,6 +20,7 @@ class Fetcher < Shoes::Widget
         download
       end
     end
+    
   end
   
 protected
