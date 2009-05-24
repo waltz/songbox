@@ -8,17 +8,17 @@ require 'uri'
 
 class Track
   
-  attr_accessor :artist, :title, :location
+  attr_accessor :artist, :title, :url
   
   def initialize(args = {})
     @artist = args[:artist]
     @title = args[:title]
-    @location = args[:location]
+    @url = args[:url]
   end
   
   # Just the name of the file. (Not the full path.)
   def filename
-    URI.decode(File.basename(location))
+    URI.decode(File.basename(@url))
   end
 
   # Format track names nicely.
