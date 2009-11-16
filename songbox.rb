@@ -3,6 +3,11 @@ require 'track'
 require 'skreemr'
 
 class Songbox < Shoes
+  # Directory to store downloaded MP3's.
+  # - Must include trailing slash.
+  # - Can only be a single directory.
+  STORAGE_DIRECTORY = 'mp3/'
+  
   @@query = ""
   @@per_page = 10
   
@@ -10,6 +15,13 @@ class Songbox < Shoes
   url '/page/(\d+)', :page
   
   def index
+    begin
+      check_or_create_directory(STORAGE_DIRECTORY)
+    rescue RuntimeError => e
+      alert(e.message)
+      exit
+    end
+
     search_header
     
     stack do
@@ -35,15 +47,56 @@ class Songbox < Shoes
   def search_header
     flow(:width => 450, :height => 65) do
       background gradient(rgb(50,50,50), black)
-      query_editor = edit_line(:width => 310, :top => 15, :left => 15)
+      
+      # Start the search when the enter key is pressed.
+      keypress do |k|
+        if k == "\n"
+          debug k.inspect
+          goto_first_page
+        else
+          @query_editor.focus
+        end
+      end
+        
+      @query_editor = edit_line(:width => 310, :top => 15, :left => 15)
+      # TODO: Set neat bands as the default search.
+      # @query_editor.text = ["Matt Fox", "Jacob Berendes", "The Terribles", "Bone Zone", "Opposites Day"][rand(5)]
+      @query_editor.focus
+      # @query_editor.change { |k| debug k.text.inspect }
+      if @@query then @query_editor.text = @@query end
+      
       search_button = button('Search', :width => 100, :top => 17, :left => 335) do
-        # Pull the query from the text box and view the first page of results.
-        @@query = query_editor.text
-        visit('/page/1')
+        goto_first_page
       end
     end
     background white
-  end    
+  end
+  
+  def goto_first_page
+    @@query = @query_editor.text
+    visit '/page/1'
+  end
+  
+  def check_or_create_directory(dir)
+    if File.exists?(dir.gsub('/', ''))
+      if File.directory?(dir)
+        if File.writable?(dir)
+          raise "Success!"
+        else
+          raise "Data storage directory is unwritable."
+        end
+      else
+        raise "Data storage path exists but is not a directory. Remove or rename the file \"#{dir}\"."
+      end
+    else
+      # Try to create the directory.
+      begin
+        Dir.mkdir(dir)
+      rescue Errno::ENOENT => e
+        raise "There was an error creating the storage directory: #{e.inspect}"
+      end
+    end
+  end
 end
 
 Shoes.app(:title => 'Songbox', :width => 450, :height => 500, :resizable => false)

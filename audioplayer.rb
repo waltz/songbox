@@ -1,29 +1,50 @@
 class Audioplayer < Shoes::Widget
   def initialize(args = {})
+    # An almost-invisible video object to play the mp3.
     flow(:height => 1, :width => 1) do
       @player = video args[:filename]
     end
 
+    # Build a flow for displaying info.
     @display = flow {}
     
+    # Jump to the default state.
     default_state
   end
 
+  private
+  
+  # Show the play button. Underline the play button on hover. Start the player on click.
   def default_state
     @display.clear do
-      hover { debug("hover");@text.style(:stroke => dodgerblue, :underline => "single") }
+      hover do
+        debug("hover")
+        @text.underline = "single" 
+      end
       click { @player.play; show_time_counter }
-      leave { debug("leave");@text.style(:stroke => rgb(175, 31, 123), :underline => "none") }
+      leave do
+        debug("leave")
+        @text.underline = "none"
+      end
       
-      @text = para "Play", :stroke => rgb(175, 31, 123), :size => 15
+      @text = para "Play", :stroke => dodgerblue, :size => 15, :underline => "none"
     end
   end
   
   def show_time_counter
     @display.clear do
-      hover { show_stop_button }
-      click {}
-      leave {}
+      hover do
+        @time.hide
+        @text.show
+      end
+      click do
+        @player.stop
+        default_state
+      end
+      leave do
+        @text.hide
+        @time.show
+      end
       
       animate(10) do
         if @player.playing?
@@ -34,6 +55,7 @@ class Audioplayer < Shoes::Widget
       end
       
       @time = para "0:00", :stroke => rgb(175, 31, 123), :size => 15
+      @text = para "Stop", :stroke => dodgerblue, :size => 15, :hidden => true
     end
   end
   
@@ -41,9 +63,9 @@ class Audioplayer < Shoes::Widget
     @display.clear do
       hover {}
       click { @player.stop; default_state }
-      leave { show_time_counter}
+      leave { show_time_counter }
       
-      para "Stop", :stroke => dodgerblue, :size => 15, :underline => "single"
+      para "Stop", :stroke => dodgerblue, :size => 15
     end
   end
   

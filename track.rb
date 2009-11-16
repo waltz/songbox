@@ -5,6 +5,7 @@
 ##
 
 require 'uri'
+require 'digest/md5'
 
 class Track
   
@@ -30,8 +31,16 @@ class Track
     elsif title
       "#{title}"
     else
-      "No title found."
+      "#{filename}"
     end
   end
   
+  # Nicely formatted filename.
+  def formatted_filename
+    name.downcase.strip.gsub(' ', '_').gsub(/\W/, '_').gsub('_', '-').gsub(/-{2,}/, '-')
+  end
+  
+  def hash
+    Digest::MD5.hexdigest(self.name).to_s
+  end
 end

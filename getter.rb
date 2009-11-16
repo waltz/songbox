@@ -1,6 +1,8 @@
 require 'audioplayer'
 
 class Getter < Shoes::Widget
+  SAVE_PREFIX = './mp3s/' # Be sure to include the trailing slash!
+  
   def initialize(args = {})
     @color = args[:color] || gray
     @track = args[:track]
@@ -38,10 +40,10 @@ class Getter < Shoes::Widget
       click {}; hover {}; leave {}
       
       download(@track.url,
-               :save => @track.filename,
-               :progress => proc {|d| @progress.text = "#{d.percent}%"},
-               :finish => proc { insert_player },
-               :error => proc { |d, err| failure(err) })
+               :save      => @track.hash,
+               :progress  => proc { |d| @progress.text = "#{d.percent}%" },
+               :finish    => proc { insert_player },
+               :error     => proc { |d, err| failure(err) })
     end
   end
   
