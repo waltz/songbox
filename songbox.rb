@@ -81,7 +81,7 @@ class Songbox < Shoes
     if File.exists?(dir.gsub('/', ''))
       if File.directory?(dir)
         if File.writable?(dir)
-          raise "Success!"
+          return
         else
           raise "Data storage directory is unwritable."
         end
