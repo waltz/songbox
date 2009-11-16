@@ -5,7 +5,7 @@ require 'skreemr'
 # Directory to store downloaded MP3's.
 # - Must include trailing slash.
 # - Can only be a single directory.
-$STORAGE_DIRECTORY = 'mp3/'
+$STORAGE_DIRECTORY = 'mp3s/'
 
 class Songbox < Shoes
   @@query = ""
