@@ -26,7 +26,7 @@ class Skreemr < Shoes::Widget
   
   # Builds the query URL.
   def url(query, results_per_page = 10, offset = 0)
-    "http://skreemr.com/results.jsp?q=#{URI.encode(query)}&l=#{results_per_page}&s=#{offset}&search=SkreemR+Search"
+    "http://skreemr.com/results.jsp?q=#{URI.encode(query)}&l=#{results_per_page}&s=#{offset}"
   end
   
   # Called when the results are finished downloading.
@@ -35,7 +35,7 @@ class Skreemr < Shoes::Widget
     doc = Hpricot(dl.response.body)
     
     # Fish for the tracks.
-    tracks = doc.search("a[@rel='nofollow']").map do |e|
+    tracks = doc.search(".info a.snap_noshots").map do |e|
       Track.new(:url => e[:href],
                 :artist => e.search("span").inner_html.gsub(/\A[\s]*/, ''))          
     end
