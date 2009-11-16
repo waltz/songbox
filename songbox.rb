@@ -2,12 +2,12 @@ require 'getter'
 require 'track'
 require 'skreemr'
 
+# Directory to store downloaded MP3's.
+# - Must include trailing slash.
+# - Can only be a single directory.
+$STORAGE_DIRECTORY = 'mp3/'
+
 class Songbox < Shoes
-  # Directory to store downloaded MP3's.
-  # - Must include trailing slash.
-  # - Can only be a single directory.
-  STORAGE_DIRECTORY = 'mp3/'
-  
   @@query = ""
   @@per_page = 10
   
@@ -16,7 +16,7 @@ class Songbox < Shoes
   
   def index
     begin
-      check_or_create_directory(STORAGE_DIRECTORY)
+      check_or_create_directory($STORAGE_DIRECTORY)
     rescue RuntimeError => e
       alert(e.message)
       exit
