@@ -9,7 +9,7 @@ Songbox is an quick-n-dirty MP3 downloader. Plug in a search in the box at the t
 and you'll be on your merry way to oodles of free music.
 
 ## How does it work? ##
-We ask our friends over at [Seeqpod](http://seeqpod.com) for the locations of the music that you're looking for.
+We ask our friends over at [Skreemr](http://skreemr.com) for the locations of the music that you're looking for.
 Once we have those locations we give you the download button and make sure the file is saved to the right place.
 
 ## Why don't some of the songs download? ##
